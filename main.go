@@ -51,8 +51,6 @@ func main() {
 			if err != nil {
 				slog.Error("unable to add year to file", "file", file)
 			}
-		} else {
-			slog.Error("no year found for song", "file", file)
 		}
 	}
 }
