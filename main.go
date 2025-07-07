@@ -43,9 +43,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	client.QueryForTags(tracksNeedYear)
+	modified := client.QueryForTags(tracksNeedYear)
 
-	for _, file := range tracksNeedYear {
+	for _, file := range modified {
 		if file.Year != "" {
 			err := audio.ModifyYear(file.File, file.Year)
 			if err != nil {

@@ -41,7 +41,7 @@ func NewGeminiClient() (*GeminiClient, error) {
 	}, nil
 }
 
-func (c *GeminiClient) QueryForTags(audioFiles []*audio.AudioFile) {
+func (c *GeminiClient) QueryForTags(audioFiles []*audio.AudioFile) []*audio.AudioFile {
 	ctx := context.Background()
 	model := c.client.GenerativeModel("gemini-2.0-flash")
 	model.SystemInstruction = &genai.Content{
@@ -49,6 +49,7 @@ func (c *GeminiClient) QueryForTags(audioFiles []*audio.AudioFile) {
 			genai.Text(GeminiQueryPrefix),
 		},
 	}
+	modified := make([]*audio.AudioFile, 0)
 	for _, file := range audioFiles {
 		b, err := file.ToJSONQuery()
 		if err != nil {
@@ -58,7 +59,7 @@ func (c *GeminiClient) QueryForTags(audioFiles []*audio.AudioFile) {
 		if err != nil {
 			slog.Error("unable to query gemini", "error", err, "type", reflect.TypeOf(err))
 			if apiErr, ok := err.(*apierror.APIError); ok && apiErr.HTTPCode() == 429 {
-				return
+				break
 			}
 			continue
 		}
@@ -68,7 +69,9 @@ func (c *GeminiClient) QueryForTags(audioFiles []*audio.AudioFile) {
 			continue
 		}
 		file.Year = tagResponse.Year
+		modified = append(modified, file)
 	}
+	return modified
 
 }
 
