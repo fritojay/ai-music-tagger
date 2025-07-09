@@ -16,7 +16,7 @@ import (
 	"google.golang.org/api/option"
 )
 
-const GeminiQueryPrefix = "You are an API that returns the year a song or album was released. I will give you a json object that contains the artist name and the title or album name of the year I need. Respond in the format without any markdown or additional characters. JSON Only. {'year':'2025-06-06'}."
+const GeminiQueryPrefix = "You are an API that returns the year a song or album was released. I will give you a json object that contains the artist name and the title or album name of the year I need. Respond in valid JSON format without any markdown or additional characters. {'year':'2025-06-06'}."
 
 type GeminiClient struct {
 	client *genai.Client
